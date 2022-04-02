@@ -24,8 +24,8 @@ class Circle extends Component {
     super.draw(context);
     context.beginPath();
     context.arc(
-      this.getGlobalPositionX(),
-      this.getGlobalPositionY(),
+      this.globalPositionX,
+      this.globalPositionY,
       this.radius,
       0,
       2 * Math.PI

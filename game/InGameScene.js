@@ -12,7 +12,7 @@ class InGameScene extends Scene {
     super('#c7e7ff');
     this.isEndGame = false;
     this.addChild(Bird);
-    // this.addChild(ObstacleManager);
+    this.addChild(ObstacleManager);
     this.addChild(TimeToStartText);
     this.addChild(GameOverText);
     this.remainingTimeToStartCountdown = new CountdownTimer(
@@ -22,7 +22,7 @@ class InGameScene extends Scene {
         if (time <= 0) {
           TimeToStartText.setVisible(false);
           Bird.setVisible(true);
-          // ObstacleManager.setVisible(true);
+          ObstacleManager.setVisible(true);
         }
       }
     );
@@ -40,10 +40,9 @@ class InGameScene extends Scene {
   }
 
   reset() {
-    console.log('reset');
     TimeToStartText.reset();
     Bird.reset();
-    // ObstacleManager.reset();
+    ObstacleManager.reset();
     GameOverText.reset();
     this.remainingTimeToStartCountdown.reset();
     this.gameOverCountdown.reset();
@@ -60,7 +59,7 @@ class InGameScene extends Scene {
       this.fadeInEffect.update(deltaTime);
       this.remainingTimeToStartCountdown.update(deltaTime);
       Bird.update(deltaTime);
-      // ObstacleManager.update(deltaTime);
+      ObstacleManager.update(deltaTime);
 
       if (this.isDead()) {
         this.isEndGame = true;
@@ -72,7 +71,8 @@ class InGameScene extends Scene {
   }
 
   isDead() {
-    return Bird.getPositionY() + Bird.height >= GameConfig.height;
+    // return Bird.getPositionY() + Bird.height >= GameConfig.height;
+    return false;
   }
 }
 

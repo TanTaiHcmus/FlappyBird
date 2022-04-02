@@ -1,72 +1,135 @@
 class Component {
   constructor(x, y) {
-    this.x = x || 0;
-    this.y = y || 0;
+    this.positionX = x || 0;
+    this.positionY = y || 0;
+    this.globalPositionX = this.positionX;
+    this.globalPositionY = this.positionY;
     this.parent = null;
     this.visible = true;
-    this.opacity = 1;
+    this.alpha = 1;
+    this.globalAlpha = this.alpha;
   }
 
   setParent(parent) {
     this.parent = parent;
+    this.syncGlobalPosition();
+    this.syncGlobalOpacity();
   }
 
   setPosition(x, y) {
-    this.x = x;
-    this.y = y;
+    this.positionX = x;
+    this.positionY = y;
+    this.syncGlobalPosition();
+  }
+
+  getPosition() {
+    return { x: this.positionX, y: this.positionY };
   }
 
   setPositionX(x) {
-    this.x = x;
+    this.positionX = x;
+    this.syncGlobalPositionX();
+  }
+
+  set x(x) {
+    this.positionX = x;
+    this.syncGlobalPositionX();
   }
 
   setPositionY(y) {
-    this.y = y;
+    this.positionY = y;
+    this.syncGlobalPositionY();
+  }
+
+  set y(y) {
+    this.positionY = y;
+    this.syncGlobalPositionY();
   }
 
   getPositionX() {
-    return this.x;
+    return this.positionX;
+  }
+
+  get x() {
+    return this.positionX;
   }
 
   getPositionY() {
-    return this.y;
+    return this.positionY;
+  }
+
+  get y() {
+    return this.positionY;
   }
 
   getGlobalPosition() {
-    if (!this.parent) return { x: 0, y: 0 };
-    if (!this.parent.getGlobalPosition) return { x: this.x, y: this.y };
-
-    const { x, y } = this.parent.getGlobalPosition();
-    return { x: x + this.x, y: y + this.y };
+    return {
+      x: this.globalPositionX,
+      y: this.globalPositionY,
+    };
   }
 
   getGlobalPositionX() {
-    if (!this.parent) return 0;
-    return this.parent.getGlobalPositionX
-      ? this.parent.getGlobalPositionX() + this.x
-      : this.x;
+    return this.globalPositionX;
   }
 
   getGlobalPositionY() {
-    if (!this.parent) return 0;
-    return this.parent.getGlobalPositionY
-      ? this.parent.getGlobalPositionY() + this.y
-      : this.y;
+    return this.globalPositionY;
   }
 
   setOpacity(value) {
-    this.opacity = value;
+    this.alpha = value;
+    this.syncGlobalOpacity();
+  }
+
+  set opacity(value) {
+    this.alpha = value;
+    this.syncGlobalOpacity();
   }
 
   getOpacity() {
-    return this.opacity;
+    return this.alpha;
+  }
+
+  get opacity() {
+    return this.alpha;
   }
 
   getGlobalOpacity() {
-    return (
-      this.opacity *
-      (this.parent.getGlobalOpacity ? this.parent.getGlobalOpacity() : 1)
-    );
+    return this.globalAlpha;
+  }
+
+  syncGlobalPosition() {
+    const { x, y } =
+      this.parent && this.parent.getGlobalPosition
+        ? this.parent.getGlobalPosition()
+        : { x: 0, y: 0 };
+    this.globalPositionX = this.positionX + x;
+    this.globalPositionY = this.positionY + y;
+  }
+
+  syncGlobalPositionX() {
+    this.globalPositionX =
+      this.positionX +
+      (this.parent && this.parent.getGlobalPositionX
+        ? this.parent.getGlobalPositionX()
+        : 0);
+  }
+
+  syncGlobalPositionY() {
+    this.globalPositionY =
+      this.positionY +
+      (this.parent && this.parent.getGlobalPositionY
+        ? this.parent.getGlobalPositionY()
+        : 0);
+  }
+
+  syncGlobalOpacity() {
+    this.globalAlpha =
+      this.alpha *
+      (this.parent && this.parent.getGlobalOpacity
+        ? this.parent.getGlobalOpacity()
+        : 1);
   }
 
   setVisible(visible) {
@@ -78,7 +141,7 @@ class Component {
   }
 
   draw(context) {
-    context.globalAlpha = this.getGlobalOpacity();
+    context.globalAlpha = this.globalAlpha;
   }
 
   removeFromParent() {

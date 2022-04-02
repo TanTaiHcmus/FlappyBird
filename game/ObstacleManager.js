@@ -4,13 +4,14 @@ import Obstacle from './Obstacle.js';
 
 class ObstacleManager extends GameObject {
   constructor() {
-    super(0, 0);
+    super();
     let nextObstacleX = 0;
     while (nextObstacleX <= GameConfig.width + GameConfig.obstacleWidth) {
       this.addChild(new Obstacle());
       nextObstacleX +=
         GameConfig.obstacleWidth + GameConfig.distanceBetweenTwoObstacle;
     }
+
     this.reset();
   }
 
@@ -27,8 +28,17 @@ class ObstacleManager extends GameObject {
   }
 
   update(deltaTime) {
+    if (!this.getVisible()) return;
     this.children.forEach((child) => {
-      child.setPositionX(child.getPositionX() - GameConfig.gameSpeed);
+      const newPositionX = child.getPositionX() - GameConfig.gameSpeed;
+      child.setPositionX(newPositionX);
+      if (newPositionX + GameConfig.obstacleWidth <= 0) {
+        child.setPositionX(
+          newPositionX +
+            this.children.length *
+              (GameConfig.obstacleWidth + GameConfig.distanceBetweenTwoObstacle)
+        );
+      }
     });
   }
 }

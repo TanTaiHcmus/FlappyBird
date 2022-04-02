@@ -28,7 +28,12 @@ class Rectangle extends Component {
   draw(context) {
     super.draw(context);
     context.beginPath();
-    context.rect(this.x, this.y, this.width, this.height);
+    context.rect(
+      this.globalPositionX,
+      this.globalPositionY,
+      this.width,
+      this.height
+    );
     if (this.fillStyle) {
       context.fillStyle = this.fillStyle;
       context.fill();

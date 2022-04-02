@@ -35,11 +35,11 @@ class Text extends Component {
 
     if (this.fillStyle) {
       context.fillStyle = this.fillStyle;
-      context.fillText(this.text, this.x, this.y);
+      context.fillText(this.text, this.globalPositionX, this.globalPositionY);
     }
     if (this.strokeStyle) {
       context.strokeStyle = this.strokeStyle;
-      context.strokeText(this.text, this.x, this.y);
+      context.strokeText(this.text, this.globalPositionX, this.globalPositionY);
     }
   }
 }
