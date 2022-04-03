@@ -10,7 +10,9 @@ class GameConfig {
   static birdHeight = 40;
   static xBird = 100;
   static fps = 60;
-  static gameSpeed = 3;
+  static fallSpeed = 180; // px/s
+  static jump = 60;
+  static obstacleSpeed = 240; // px/s
 }
 
 export default GameConfig;

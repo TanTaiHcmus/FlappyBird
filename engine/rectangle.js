@@ -17,6 +17,14 @@ class Rectangle extends Component {
     this.height = height;
   }
 
+  getWidth() {
+    return this.width;
+  }
+
+  getHeight() {
+    return this.height;
+  }
+
   setFillStyle(color) {
     this.fillStyle = color;
   }

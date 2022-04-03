@@ -23,7 +23,7 @@ class Bird extends Rectangle {
   eventHandler(event) {
     if (event.code === 'Space' && this.visible) {
       if (event.type === 'keydown') {
-        if (this.y > 0 && this.canMove) this.y = this.y - 60;
+        if (this.y > 0 && this.canMove) this.y = this.y - GameConfig.jump;
         this.canMove = false;
       } else if (event.type === 'keyup') {
         this.canMove = true;
@@ -33,7 +33,7 @@ class Bird extends Rectangle {
 
   update(deltaTime) {
     if (this.visible && this.y < GameConfig.height) {
-      this.y = this.y + 3;
+      this.y = this.y + GameConfig.fallSpeed * deltaTime;
     }
   }
 }

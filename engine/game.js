@@ -9,6 +9,9 @@ class Game {
     this.isStart = false;
     this.ticker = null;
     this.fps = fps || 60;
+    window.addEventListener('beforeunload', () => {
+      this.end();
+    });
   }
 
   start() {
@@ -16,7 +19,7 @@ class Game {
       this.isStart = true;
       this.ticker = setInterval(() => {
         if (!this.isStart || this.scenes.length === 0) return;
-        this.update(1000 / this.fps);
+        this.update(1 / this.fps);
         this.scenes[this.scenes.length - 1].draw(this.context);
       }, 1000 / this.fps);
     }

@@ -30,7 +30,8 @@ class ObstacleManager extends GameObject {
   update(deltaTime) {
     if (!this.getVisible()) return;
     this.children.forEach((child) => {
-      const newPositionX = child.getPositionX() - GameConfig.gameSpeed;
+      const newPositionX =
+        child.getPositionX() - GameConfig.obstacleSpeed * deltaTime;
       child.setPositionX(newPositionX);
       if (newPositionX + GameConfig.obstacleWidth <= 0) {
         child.setPositionX(

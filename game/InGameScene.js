@@ -1,5 +1,6 @@
 import Scene from '../engine/scene.js';
 import Bird from './Bird.js';
+import CollisionManager from './CollisionManager.js';
 import CountdownTimer from './CountdownTimer.js';
 import FadeInEffect from './FadeInEffect.js';
 import GameConfig from './GameConfig.js';
@@ -18,7 +19,7 @@ class InGameScene extends Scene {
     this.remainingTimeToStartCountdown = new CountdownTimer(
       TIME_TO_START_DURATION,
       (time) => {
-        TimeToStartText.setText(Math.ceil(time / 1000));
+        TimeToStartText.setText(Math.ceil(time));
         if (time <= 0) {
           TimeToStartText.setVisible(false);
           Bird.setVisible(true);
@@ -26,7 +27,7 @@ class InGameScene extends Scene {
         }
       }
     );
-    this.gameOverCountdown = new CountdownTimer(1500, (time) => {
+    this.gameOverCountdown = new CountdownTimer(1.5, (time) => {
       if (time <= 0) {
         this.game.handleBackScene();
       }
@@ -34,9 +35,11 @@ class InGameScene extends Scene {
     this.fadeInEffect = new FadeInEffect(
       GameConfig.width,
       GameConfig.height,
-      500
+      0.5
     );
     this.addChild(this.fadeInEffect);
+    this.checkCollisionObstacleIndex = 0;
+    this.score = 0;
   }
 
   reset() {
@@ -48,10 +51,12 @@ class InGameScene extends Scene {
     this.gameOverCountdown.reset();
     this.fadeInEffect.reset();
     this.isEndGame = false;
+    this.checkCollisionObstacleIndex = 0;
+    this.score = 0;
   }
 
   eventHandler(event) {
-    Bird.eventHandler(event);
+    if (!this.isEndGame) Bird.eventHandler(event);
   }
 
   update(deltaTime) {
@@ -71,8 +76,28 @@ class InGameScene extends Scene {
   }
 
   isDead() {
-    // return Bird.getPositionY() + Bird.height >= GameConfig.height;
-    return false;
+    return (
+      Bird.getPositionY() + Bird.height >= GameConfig.height ||
+      this.checkCollisionWithBird()
+    );
+  }
+
+  checkCollisionWithBird() {
+    const obstacle = ObstacleManager.children[this.checkCollisionObstacleIndex];
+
+    if (Bird.x > obstacle.x + GameConfig.obstacleWidth) {
+      this.score++;
+      this.checkCollisionObstacleIndex =
+        (this.checkCollisionObstacleIndex + 1) %
+        ObstacleManager.children.length;
+      return false;
+    } else if (Bird.x + GameConfig.birdWidth < obstacle.x) {
+      return false;
+    } else
+      return (
+        CollisionManager.checkCollisionRectRect(Bird, obstacle.topObstacle) ||
+        CollisionManager.checkCollisionRectRect(Bird, obstacle.bottomObstacle)
+      );
   }
 }
 

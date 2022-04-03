@@ -12,6 +12,10 @@ class Circle extends Component {
     this.radius = radius;
   }
 
+  getRadius() {
+    return this.radius;
+  }
+
   setFillStyle(color) {
     this.fillStyle = color;
   }

@@ -29,7 +29,7 @@ class HomeScene extends Scene {
     this.fadeInEffect = new FadeInEffect(
       GameConfig.width,
       GameConfig.height,
-      1000
+      1
     );
     this.addChild(this.fadeInEffect);
   }
