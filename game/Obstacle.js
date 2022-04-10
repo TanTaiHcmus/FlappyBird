@@ -31,17 +31,20 @@ class Obstacle extends GameObject {
         Math.random() *
           (GameConfig.height -
             2 * GameConfig.minObstacleHeight -
-            GameConfig.distanceBetweenTopAndBottomObstacle)
+            GameConfig.minDistanceBetweenTopAndBottomObstacle)
+      );
+    const bottomHeight =
+      GameConfig.minObstacleHeight +
+      Math.floor(
+        Math.random() *
+          (GameConfig.height -
+            GameConfig.minObstacleHeight -
+            topHeight -
+            GameConfig.minDistanceBetweenTopAndBottomObstacle)
       );
     this.topObstacle.setHeight(topHeight);
-    this.bottomObstacle.setHeight(
-      GameConfig.height -
-        GameConfig.distanceBetweenTopAndBottomObstacle -
-        topHeight
-    );
-    this.bottomObstacle.setPositionY(
-      topHeight + GameConfig.distanceBetweenTopAndBottomObstacle
-    );
+    this.bottomObstacle.setHeight(bottomHeight);
+    this.bottomObstacle.setPositionY(GameConfig.height - bottomHeight);
   }
 }
 

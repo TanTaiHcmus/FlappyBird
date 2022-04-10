@@ -14,6 +14,7 @@ class Scene {
   }
 
   draw(context) {
+    context.clearRect(0, 0, context.canvas.width, context.canvas.height);
     context.globalAlpha = 1;
     context.fillStyle = this.backgroundColor;
     context.fillRect(0, 0, context.canvas.width, context.canvas.height);

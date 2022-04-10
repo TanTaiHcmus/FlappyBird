@@ -16,6 +16,7 @@ class ObstacleManager extends GameObject {
   }
 
   reset() {
+    this.speed = 1;
     this.setVisible(false);
     this.children.forEach((child, index) => {
       child.randomTopAndBottomObstacle();
@@ -27,11 +28,16 @@ class ObstacleManager extends GameObject {
     });
   }
 
+  setSpeed(speed) {
+    this.speed = speed;
+  }
+
   update(deltaTime) {
     if (!this.getVisible()) return;
     this.children.forEach((child) => {
       const newPositionX =
-        child.getPositionX() - GameConfig.obstacleSpeed * deltaTime;
+        child.getPositionX() -
+        GameConfig.obstacleSpeed * this.speed * deltaTime;
       child.setPositionX(newPositionX);
       if (newPositionX + GameConfig.obstacleWidth <= 0) {
         child.setPositionX(
