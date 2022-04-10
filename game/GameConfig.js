@@ -8,6 +8,8 @@ class GameConfig {
   static minObstacleHeight = 50;
   static birdWidth = 40;
   static birdHeight = 40;
+  static monsterWidth = 50;
+  static monsterHeight = 50;
   static xBird = 100;
   static fps = 60;
   static fallSpeed = 40;
