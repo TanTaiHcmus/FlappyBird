@@ -9,6 +9,11 @@ class CountdownTimer {
     this.timer = this.duration;
   }
 
+  setDuration(duration) {
+    this.duration = duration;
+    this.timer = duration;
+  }
+
   isCompleted() {
     return this.timer <= 0;
   }
