@@ -9,6 +9,7 @@ import GameOverText from './GameOverText.js';
 import Monster from './Monster.js';
 import ObstacleManager from './ObstacleManager.js';
 import ScoreText from './ScoreText.js';
+import SpentTime from './SpentTime.js';
 import TimeToStartText, { TIME_TO_START_DURATION } from './TimeToStartText.js';
 import WarningText from './WarningText.js';
 
@@ -26,6 +27,7 @@ class InGameScene extends Scene {
     this.addChild(WarningText);
     this.addChild(BulletManager);
     this.addChild(Monster);
+    this.addChild(SpentTime);
     this.remainingTimeToStartCountdown = new CountdownTimer(
       TIME_TO_START_DURATION,
       (time) => {
@@ -52,12 +54,6 @@ class InGameScene extends Scene {
         ObstacleManager.reset();
         this.checkCollisionObstacleIndex = 0;
         ObstacleManager.setVisible(true);
-      } else if (time <= 2) {
-        Monster.setSpeed(3);
-      } else if (time <= 5) {
-        Monster.setSpeed(2.5);
-      } else if (time <= 8) {
-        Monster.setSpeed(2);
       }
     });
     this.randomSpeedCountdown = new CountdownTimer(10, (time) => {
@@ -65,7 +61,7 @@ class InGameScene extends Scene {
         this.tick++;
         if (this.tick === GameConfig.monsterAppearTick) {
           ObstacleManager.setVisible(false);
-          Monster.reset();
+          Monster.nextLevel();
           Monster.setVisible(true);
           this.appearMonsterCountdown.reset();
         } else {
@@ -95,6 +91,7 @@ class InGameScene extends Scene {
     WarningText.reset();
     BulletManager.reset();
     Monster.reset();
+    SpentTime.reset();
     this.remainingTimeToStartCountdown.reset();
     this.gameOverCountdown.reset();
     this.fadeInEffect.reset();
@@ -128,6 +125,7 @@ class InGameScene extends Scene {
 
         Bird.update(deltaTime);
         BulletManager.update(deltaTime);
+        SpentTime.update(deltaTime);
         this.checkCollisionWithBird();
         break;
       }
@@ -161,11 +159,12 @@ class InGameScene extends Scene {
     if (visibleBullet.length > 0) {
       visibleBullet.forEach((bullet) => {
         if (CollisionManager.checkCollisionCircleRect(bullet, Bird)) {
-          if (ScoreText.getScore() === 0) {
+          const damage = bullet.getDamage();
+          if (ScoreText.getScore() < damage) {
             this.status = 'endGame';
             GameOverText.setVisible(true);
           } else {
-            ScoreText.decreaseScore();
+            ScoreText.decreaseScore(damage);
             BulletManager.removeBullet(bullet);
           }
         }

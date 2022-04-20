@@ -14,8 +14,8 @@ class ScoreText extends Text {
     this.setText(`Score: ${this.score}`);
   }
 
-  decreaseScore() {
-    this.score--;
+  decreaseScore(number) {
+    this.score -= number;
     this.setText(`Score: ${this.score}`);
   }
 

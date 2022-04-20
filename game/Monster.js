@@ -8,47 +8,66 @@ class Monster extends Rectangle {
   constructor() {
     super(
       GameConfig.xMonster,
-      0,
+      GameConfig.height / 2,
       GameConfig.monsterWidth,
       GameConfig.monsterHeight
     );
     this.setFillStyle('#b302c7');
-    this.visible = false;
-    this.shootCountdown = new CountdownTimer(
-      1 / GameConfig.monsterShootSpeed,
+    this.direction = Math.random() < 0.5 ? 'up' : 'down';
+    this.randomDirectionCountDown = new CountdownTimer(
+      GameConfig.timeToRandomDirectionMonster,
       (time) => {
         if (time <= 0) {
-          this.shoot();
-          this.shootCountdown.reset();
+          this.direction = Math.random() < 0.5 ? 'up' : 'down';
+          this.randomDirectionCountDown.reset();
         }
       }
     );
-    this.setSpeed(1);
+    this.visible = false;
+    this.shootCountdown = new CountdownTimer(0, (time) => {
+      if (time <= 0) {
+        this.shoot();
+        this.shootCountdown.reset();
+      }
+    });
+    this.level = 0;
   }
 
   reset() {
     this.visible = false;
-    this.shootCountdown.reset();
-    this.setSpeed(1);
+    this.level = 0;
+    this.randomDirectionCountDown.reset();
   }
 
   shoot() {
-    BulletManager.createBullet(this.y + this.height / 2);
+    BulletManager.createBullet(this.y + this.height / 2, this.level);
   }
 
-  setSpeed(speed) {
-    if (this.speed !== speed) {
-      this.speed = speed;
-      this.shootCountdown.setDuration(
-        1 / (GameConfig.monsterShootSpeed * speed)
-      );
-    }
+  nextLevel() {
+    this.level++;
+    this.shootCountdown.setDuration(
+      1 / (GameConfig.monsterShootSpeed * this.level)
+    );
+  }
+
+  getLevel() {
+    return this.level;
   }
 
   update(deltaTime) {
     if (this.visible) {
       this.shootCountdown.update(deltaTime);
-      this.y = Bird.getPositionY();
+      this.randomDirectionCountDown.update(deltaTime);
+      this.y =
+        this.direction === 'up'
+          ? this.y - GameConfig.monsterMove * deltaTime
+          : this.y + GameConfig.monsterMove * deltaTime;
+      if (this.y <= 0) {
+        this.y = 0;
+      }
+      if (this.y > GameConfig.height - GameConfig.monsterHeight) {
+        this.y = GameConfig.height - GameConfig.monsterHeight;
+      }
     }
   }
 }

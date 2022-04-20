@@ -25,26 +25,28 @@ class Obstacle extends GameObject {
   }
 
   randomTopAndBottomObstacle() {
+    const distanceBetweenTopAndBottomObstacle =
+      GameConfig.minDistanceBetweenTopAndBottomObstacle +
+      Math.floor(
+        Math.random() *
+          (GameConfig.maxDistanceBetweenTopAndBottomObstacle -
+            GameConfig.minDistanceBetweenTopAndBottomObstacle)
+      );
     const topHeight =
       GameConfig.minObstacleHeight +
       Math.floor(
         Math.random() *
           (GameConfig.height -
             2 * GameConfig.minObstacleHeight -
-            GameConfig.minDistanceBetweenTopAndBottomObstacle)
+            distanceBetweenTopAndBottomObstacle)
       );
     const bottomHeight =
-      GameConfig.minObstacleHeight +
-      Math.floor(
-        Math.random() *
-          (GameConfig.height -
-            GameConfig.minObstacleHeight -
-            topHeight -
-            GameConfig.minDistanceBetweenTopAndBottomObstacle)
-      );
+      GameConfig.height - topHeight - distanceBetweenTopAndBottomObstacle;
     this.topObstacle.setHeight(topHeight);
     this.bottomObstacle.setHeight(bottomHeight);
-    this.bottomObstacle.setPositionY(GameConfig.height - bottomHeight);
+    this.bottomObstacle.setPositionY(
+      topHeight + distanceBetweenTopAndBottomObstacle
+    );
   }
 }
 

@@ -16,13 +16,13 @@ class BulletManager extends GameObject {
     this.visibleBullet = [];
   }
 
-  createBullet(y) {
+  createBullet(y, damage) {
     if (this.invisibleBullet.length > 0) {
       const bullet = this.invisibleBullet.pop();
       this.visibleBullet.push(bullet);
-      bullet.reset(y);
+      bullet.reset(y, damage);
     } else {
-      const bullet = new Bullet(y);
+      const bullet = new Bullet(y, damage);
       this.visibleBullet.push(bullet);
       this.addChild(bullet);
     }
